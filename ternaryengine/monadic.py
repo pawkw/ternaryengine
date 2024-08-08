@@ -42,6 +42,7 @@ operand_dict = {
 'unKnown': 6,
 # : 7,
 'notNeg': 8,
+'notFalse': 8,
 # : 9,
 # : 10,
 # : 11,
@@ -60,6 +61,7 @@ operand_dict = {
 # : 22,
 # : 23,
 'notPos': 24,
+'notTrue': 24,
 # : 25,
 'constPos': 26,
 }
