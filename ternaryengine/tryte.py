@@ -76,6 +76,10 @@ def tritConsensus(trit1: str, trit2: str) -> str:
     return __apply_to_trit('consensus', trit1, trit2)
 
 
+def tritMul(trit1: str, trit2: str) -> str:
+    return __apply_to_trit('mul', trit1, trit2)
+
+
 ##### Tryte predicates
 
 @makeTrit
@@ -119,3 +123,55 @@ def tAdd(tryte1: str, tryte2: str) -> str:
     print(sum)
     print(carry)
     return acc
+
+
+@makeTryte
+def tMultiply(tryte1: str, tryte2: str) -> str:
+    if tIsZero(tryte1) or tIsZero(tryte2):
+        return tZ
+    
+    mul1 = strip(tryte1)
+    mul2 = strip(tryte2)
+
+    if len(tryte2) > len(tryte1):
+        mul1 = tryte2
+        mul2 = tryte1
+
+    result_list = []
+    mul2 = mul2[::-1]
+    for trit in mul2:
+        if trit == tZ:
+            continue
+        result = [tritMul(trit, t2) for t2 in mul1]
+        result_list.append(result)
+        mul1 = tShiftLeft(mul1)
+    
+    result = tZ
+    for tryte in result_list:
+        result = tAdd(result, tryte)
+    
+    return result
+
+
+##### Conversions
+
+def tryteToInt(tryte: str) -> int:
+    acc = 0
+    exponent = 1
+    tryte = tryte[::-1]
+    for trit in tryte:
+        acc += trit_chars.index(trit) * exponent
+        exponent *= 3
+    return acc
+
+
+@makeTryte
+def intToTryte(number: int) -> str:
+    negative = False
+    if number < 0:
+        negative = True
+        number *= -1
+    
+    exponent = tP
+    result = tZ
+    while number != 0:
