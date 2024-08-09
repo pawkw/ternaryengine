@@ -1,4 +1,4 @@
-from defs import trit_chars
+from ternaryengine.defs import *
 
 monadic_list = [
     'nnn',
@@ -66,7 +66,7 @@ operand_dict = {
 'constPos': 26,
 }
 
-def apply_operand(operand: str, trit: str) -> str:
+def apply_operator(operand: str, trit: str) -> str:
     if operand not in operand_dict.keys():
         raise ValueError(f'Bad operand: {operand}')
     

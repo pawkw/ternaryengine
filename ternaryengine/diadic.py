@@ -1,4 +1,4 @@
-from defs import trit_chars
+from ternaryengine.defs import *
 
 operand_dict = {
     'min': 'nnnnzznzp',
