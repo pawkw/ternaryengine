@@ -7,7 +7,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
 ##### Decorators
 
 def makeTryte(func: Callable[..., Any]) -> Callable[..., Any]:
@@ -78,6 +77,7 @@ def tritConsensus(trit1: str, trit2: str) -> str:
 
 def tritMul(trit1: str, trit2: str) -> str:
     return __apply_to_trit('mul', trit1, trit2)
+    
 
 
 ##### Tryte predicates
@@ -105,8 +105,14 @@ def tIsPos(tryte: str) -> bool:
 ##### Tryte Operators
 
 @makeTryte
-def tShiftLeft(tryte: str) -> str:
-    return (tryte+tZ)[-trits_per_tryte:]
+def tShiftLeft(tryte: str, amount: int) -> str:
+    return (tryte+tZ*amount)[-trits_per_tryte:]
+
+
+@makeTryte
+def tNegate(tryte: str) -> str:
+    return __apply_to_tryte('negate', tryte)
+
 
 @makeTryte
 def tAdd(tryte1: str, tryte2: str) -> str:
@@ -115,13 +121,13 @@ def tAdd(tryte1: str, tryte2: str) -> str:
     if tIsZero(tryte2):
         return tryte1
     
-    logger.debug(f'tAdd adding {tryte1} and {tryte2}.')
-
+    tryte1 = pad(tryte1)
+    tryte2 = pad(tryte2)
     sum = __apply_to_tryte('sum', tryte1, tryte2)
-    carry = tShiftLeft(__apply_to_tryte('consensus', tryte1, tryte2))
+    carry = tShiftLeft(__apply_to_tryte('consensus', tryte1, tryte2), 1)
     acc = __apply_to_tryte('sum', sum, carry)
-    print(sum)
-    print(carry)
+    logger.debug(f'adding {tryte1} and {tryte2} = {acc}.')
+    logger.debug(f'sum: {sum} carry: {carry}')
     return acc
 
 
@@ -142,9 +148,9 @@ def tMultiply(tryte1: str, tryte2: str) -> str:
     for trit in mul2:
         if trit == tZ:
             continue
-        result = [tritMul(trit, t2) for t2 in mul1]
+        result = ''.join([tritMul(trit, t2) for t2 in mul1])
         result_list.append(result)
-        mul1 = tShiftLeft(mul1)
+        mul1 = tShiftLeft(mul1, 1)
     
     result = tZ
     for tryte in result_list:
@@ -158,9 +164,13 @@ def tMultiply(tryte1: str, tryte2: str) -> str:
 def tryteToInt(tryte: str) -> int:
     acc = 0
     exponent = 1
+    logger.debug(f'tryte: {tryte}')
     tryte = tryte[::-1]
+    logger.debug(f'reverse tryte: {tryte}')
     for trit in tryte:
-        acc += trit_chars.index(trit) * exponent
+        value = trit_chars.index(trit) -1
+        acc += value * exponent
+        logger.debug(f'trit: {trit} value: {value} exponent: {exponent} accumulated: {acc}')
         exponent *= 3
     return acc
 
@@ -174,4 +184,15 @@ def intToTryte(number: int) -> str:
     
     exponent = tP
     result = tZ
-    while number != 0:
+    while number > 0:
+        current = decimal_index[number % 10]
+        value = tMultiply(current, exponent)
+        result = tAdd(result, value)
+        exponent = tAdd(tShiftLeft(exponent, 2), exponent)
+        number = number // 10
+        logger.debug(f'current: {current} value: {value} exponent: {exponent}')
+
+    if negative:
+        result = tNegate(result)
+
+    return result
