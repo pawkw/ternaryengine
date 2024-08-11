@@ -41,7 +41,7 @@ def pad(tryte: str) -> str:
 
 
 @makeTryte
-def __apply_to_tryte(operation: str, tryte: str) -> str:
+def __apply_unary_to_tryte(operation: str, tryte: str) -> str:
     logger.debug(f'operation {operation} tryte {tryte}')
     function = partial(monadic.apply_operator, operation)
     return ''.join(list(map(function, tryte)))
@@ -105,13 +105,78 @@ def tIsPos(tryte: str) -> bool:
 ##### Tryte Operators
 
 @makeTryte
+def tMin(tryte1: str, tryte2: str) -> str:
+    return __apply_to_tryte('min', tryte1, tryte2)
+
+
+@makeTryte
+def tMax(tryte1: str, tryte2: str) -> str:
+    return __apply_to_tryte('max', tryte1, tryte2)
+
+
+@makeTryte
+def tAntimin(tryte1: str, tryte2: str) -> str:
+    return __apply_to_tryte('antimin', tryte1, tryte2)
+
+
+@makeTryte
+def tAntimax(tryte1: str, tryte2: str) -> str:
+    return __apply_to_tryte('min', tryte1, tryte2)
+
+
+@makeTryte
+def tSum(tryte1: str, tryte2: str) -> str:
+    return __apply_to_tryte('sum', tryte1, tryte2)
+
+
+@makeTryte
+def tXor(tryte1: str, tryte2: str) -> str:
+    return __apply_to_tryte('xor', tryte1, tryte2)
+
+
+@makeTryte
+def tConsensus(tryte1: str, tryte2: str) -> str:
+    return __apply_to_tryte('consensus', tryte1, tryte2)
+
+
+@makeTryte
+def tAny(tryte1: str, tryte2: str) -> str:
+    return __apply_to_tryte('any', tryte1, tryte2)
+
+
+@makeTryte
+def tSame(tryte1: str, tryte2: str) -> str:
+    return __apply_to_tryte('same', tryte1, tryte2)
+
+
+@makeTryte
+def tEqual(tryte1: str, tryte2: str) -> str:
+    return __apply_to_tryte('equal', tryte1, tryte2)
+
+
+@makeTryte
+def tDiff(tryte1: str, tryte2: str) -> str:
+    return __apply_to_tryte('diff', tryte1, tryte2)
+
+
+@makeTryte
+def tMul(tryte1: str, tryte2: str) -> str:
+    return __apply_to_tryte('mul', tryte1, tryte2)
+
+
+@makeTryte
+def tCompare(tryte1: str, tryte2: str) -> str:
+    return __apply_to_tryte('compare', tryte1, tryte2)
+
+
+@makeTryte
 def tShiftLeft(tryte: str, amount: int) -> str:
     return (tryte+tZ*amount)[-trits_per_tryte:]
 
 
 @makeTryte
 def tNegate(tryte: str) -> str:
-    return __apply_to_tryte('negate', tryte)
+    return __apply_unary_to_tryte('negate', tryte)
 
 
 @makeTryte
