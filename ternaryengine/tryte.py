@@ -110,6 +110,12 @@ def pIsPos(tryte: str) -> bool:
 ##### Tryte Operators
 
 @makeTryte
+def tStrip(tryte: str) -> str:
+    result = trits_per_tryte - len(strip(tryte))
+    return intToTryte(result)
+
+
+@makeTryte
 def tMin(tryte1: str, tryte2: str) -> str:
     return __apply_to_tryte('min', tryte1, tryte2)
 
@@ -189,6 +195,13 @@ def tShiftLeft(tryte: str, amount: int) -> str:
     global log_depth, indent
     logger.debug(f'{indent * log_depth}>>>>> shift left {tryte} {amount}')
     return (tryte+(tZ*amount))[-trits_per_tryte:]
+
+
+@makeTryte
+def tShiftRight(tryte: str, amount: int) -> str:
+    global log_depth, indent
+    logger.debug(f'{indent * log_depth}>>>>> shift left {tryte} {amount}')
+    return ((tZ*amount)+tryte)[:trits_per_tryte]
 
 
 @makeTryte

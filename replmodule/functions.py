@@ -2,6 +2,15 @@ import logging
 from typing import List, Callable
 from ternaryengine.tryte import *
 
+
+bct_bits = ['10', '00', '01']
+def func_binary_coded_ternary(tryte: str) -> str:
+    result = ''
+    for trit in tryte:
+        result += bct_bits[trit_chars.index(trit)]
+    return result
+
+
 function_dict = {
     'sign': (pSign, 1),
     'ispos': (tIsPos, 1),
@@ -31,17 +40,14 @@ function_dict = {
     'mul': (tMul, 2),
     'compare': (tCompare, 2),
     '<<': (lambda tright, amount: tShiftLeft(tright, tryteToInt(amount)), 2),
+    '>>': (lambda tright, amount: tShiftRight(tright, tryteToInt(amount)), 2),
     'negate': (tNegate, 1),
     '+': (tAdd, 2),
     '*': (tMultiply, 2),
+    'bct': (func_binary_coded_ternary, 1)
 }
 
 logger = logging.getLogger(__name__)
-
-def funcShiftLeft(tryte: str, amount: str) -> Callable:
-    int_amount = tryteToInt(amount)
-    return tShiftLeft(tryte, int_amount)
-
 
 def get_function_list() -> List:
     return function_dict.keys()
