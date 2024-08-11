@@ -6,6 +6,8 @@ import ternaryengine.diadic as diadic
 import logging
 
 logger = logging.getLogger(__name__)
+log_depth = 0
+indent = '  '
 
 ##### Decorators
 
@@ -30,39 +32,39 @@ def makeTrit(func: Callable[..., Any]) -> Callable[..., Any]:
 ##### Helpers
 
 def strip(tryte: str) -> str:
-    logger.debug(f'tryte {tryte}')
+    # logger.debug(f'tryte {tryte}')
     return tryte.lstrip(tZ)
 
 
 @makeTryte
 def pad(tryte: str) -> str:
-    logger.debug(f'tryte {tryte}')
+    # logger.debug(f'tryte {tryte}')
     return tryte
 
 
 @makeTryte
 def __apply_unary_to_tryte(operation: str, tryte: str) -> str:
-    logger.debug(f'operation {operation} tryte {tryte}')
+    # logger.debug(f'operation {operation} tryte {tryte}')
     function = partial(monadic.apply_operator, operation)
     return ''.join(list(map(function, tryte)))
 
 
 @makeTryte
 def __apply_to_tryte(operation: str, tryte1: str, tryte2: str) -> str:
-    logger.debug(f'operation {operation} tryte1 {tryte1} tryte2 {tryte2}')
+    # logger.debug(f'operation {operation} tryte1 {tryte1} tryte2 {tryte2}')
     function = partial(diadic.apply_operator, operation)
     return ''.join(list(map(function, tryte1, tryte2)))
 
 
 @makeTrit
 def __apply_to_trit(operation: str, trit) -> str:
-    logger.debug(f'operation {operation} trit {trit}')
+    # logger.debug(f'operation {operation} trit {trit}')
     return monadic.apply_operator(operation, trit)
 
 
 @makeTrit
 def __apply_to_trit(operation: str, trit1: str, trit2: str) -> str:
-    logger.debug(f'operation {operation} trit1 {trit1} trit2 {trit2}')
+    # logger.debug(f'operation {operation} trit1 {trit1} trit2 {trit2}')
     return diadic.apply_operator(operation, trit1, trit2)
 
 ##### Tritwise operators
@@ -181,24 +183,51 @@ def tNegate(tryte: str) -> str:
 
 @makeTryte
 def tAdd(tryte1: str, tryte2: str) -> str:
+    global log_depth, indent
+    logger.debug(f'{indent * log_depth}>>>>> add {tryte1} {tryte2}')
+    log_depth += 1
     if tIsZero(tryte1):
+        log_depth -= 1
         return tryte2
     if tIsZero(tryte2):
+        log_depth -= 1
         return tryte1
     
-    tryte1 = pad(tryte1)
-    tryte2 = pad(tryte2)
-    sum = __apply_to_tryte('sum', tryte1, tryte2)
-    carry = tShiftLeft(__apply_to_tryte('consensus', tryte1, tryte2), 1)
-    acc = __apply_to_tryte('sum', sum, carry)
-    logger.debug(f'adding {tryte1} and {tryte2} = {acc}.')
-    logger.debug(f'sum: {sum} carry: {carry}')
-    return acc
+    len1 = len(tryte1)
+    len2 = len(tryte2)
+    add1 = tryte1[::-1] if len1 > len2 else tryte2[::-1]
+    add2 = tryte2[::-1] if len2 < len1 else tryte1[::-1]
+    len1 = len(add1)
+    len2 = len(add2)
+
+    carry = tZ
+    acc = tZ
+    index = 0
+    result = ''
+    while index < len1:
+        t1 = add1[index]
+        t2 = tZ if index > (len2-1) else add2[index]
+        carry1 = __apply_to_trit('consensus', carry, t1)
+        acc = __apply_to_trit('sum', carry, t1)
+        carry2 = __apply_to_trit('consensus', acc, t2)
+        acc = __apply_to_trit('sum', acc, t2)
+        carry = __apply_to_trit('sum', carry1, carry2)
+        result = acc + result
+        logger.debug(f'{indent * log_depth}{t1} + {t2} = {acc} carry {carry} accumulated {result}')
+        index += 1
+        
+    logger.debug(f'{indent * log_depth}***** returning: {result}')
+    log_depth -= 1
+    return result
 
 
 @makeTryte
 def tMultiply(tryte1: str, tryte2: str) -> str:
+    global log_depth, indent
+    logger.debug(f'{indent * log_depth}>>>>> multiply {tryte1} {tryte2}')
+    log_depth += 1
     if tIsZero(tryte1) or tIsZero(tryte2):
+        log_depth -= 1
         return tZ
     
     mul1 = strip(tryte1)
@@ -212,8 +241,10 @@ def tMultiply(tryte1: str, tryte2: str) -> str:
     mul2 = mul2[::-1]
     for trit in mul2:
         if trit == tZ:
+            mul1 = tShiftLeft(mul1, 1)
             continue
         result = ''.join([tritMul(trit, t2) for t2 in mul1])
+        logger.debug(f'{indent * log_depth}result for {trit} = {result}')
         result_list.append(result)
         mul1 = tShiftLeft(mul1, 1)
     
@@ -221,43 +252,60 @@ def tMultiply(tryte1: str, tryte2: str) -> str:
     for tryte in result_list:
         result = tAdd(result, tryte)
     
+    logger.debug(f'{indent * log_depth}***** returning: {result}')
+    log_depth -= 1
     return result
 
 
 ##### Conversions
 
 def tryteToInt(tryte: str) -> int:
+    global log_depth, indent
+    logger.debug(f'{indent * log_depth}>>>>> {tryte}')
+    log_depth += 1
     acc = 0
     exponent = 1
-    logger.debug(f'tryte: {tryte}')
+    logger.debug(f'{indent * log_depth}tryte: {tryte}')
     tryte = tryte[::-1]
-    logger.debug(f'reverse tryte: {tryte}')
+    logger.debug(f'{indent * log_depth}reverse tryte: {tryte}')
     for trit in tryte:
         value = trit_chars.index(trit) -1
         acc += value * exponent
-        logger.debug(f'trit: {trit} value: {value} exponent: {exponent} accumulated: {acc}')
+        logger.debug(f'{indent * log_depth}trit: {trit} value: {value} exponent: {exponent} accumulated: {acc}')
         exponent *= 3
+    logger.debug(f'{indent * log_depth}***** returning: {acc}')
+    log_depth -= 1
     return acc
 
 
 @makeTryte
 def intToTryte(number: int) -> str:
+    global log_depth, indent
+    logger.debug(f'{indent*log_depth}>>>>> {number}')
+    log_depth += 1
     negative = False
     if number < 0:
+        logger.debug(f'{indent * log_depth}!!! Negative set to True.')
         negative = True
         number *= -1
     
     exponent = tP
     result = tZ
     while number > 0:
-        current = decimal_index[number % 10]
-        value = tMultiply(current, exponent)
+        logger.debug(f'{indent * log_depth}getting value')
+        current = number % 10
+        digit = decimal_index[current]
+        value = tMultiply(digit, exponent)
         result = tAdd(result, value)
-        exponent = tAdd(tShiftLeft(exponent, 2), exponent)
+        logger.debug(f'{indent * log_depth}current: {current} ternary: {digit} value: {value} exponent: {exponent} acc: {result}\n')
         number = number // 10
-        logger.debug(f'current: {current} value: {value} exponent: {exponent}')
+        if number > 0:
+            logger.debug(f'{indent * log_depth}getting exponent')
+            exponent = tAdd(tShiftLeft(exponent, 2), exponent)
 
     if negative:
         result = tNegate(result)
 
+    logger.debug(f'{indent * log_depth}***** returning: {result}')
+    log_depth -= 1
     return result

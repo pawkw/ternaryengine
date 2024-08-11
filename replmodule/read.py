@@ -2,7 +2,7 @@ import logging
 from TokenBuffer import TokenBuffer
 from typing import List, Any
 from replmodule.Ast import AST
-from ternaryengine import intToTryte
+from ternaryengine.tryte import intToTryte
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +40,7 @@ def READ(buffer: TokenBuffer) -> AST:
                 logger.debug('matched decimal value')
                 result.type = 'value'
                 result.data = intToTryte(int(peek.value))
+                logger.debug('\n\n')
             case 'IDENTIFIER':
                 logger.debug('matched identifier')
                 result.type = 'ident'

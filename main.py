@@ -24,7 +24,7 @@ print(f'result: {result} = {decimal}')
 if decimal != (d1*d2):
     print('Error!')
 
-for number in range(-13, 13):
+for number in range(-82, 82):
     tryte = intToTryte(number)
     decimal = tryteToInt(tryte)
     print(f'{number} {tryte} {decimal} {'Error!' if number != decimal else ''}')
