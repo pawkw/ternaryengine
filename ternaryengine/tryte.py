@@ -173,7 +173,9 @@ def tCompare(tryte1: str, tryte2: str) -> str:
 
 @makeTryte
 def tShiftLeft(tryte: str, amount: int) -> str:
-    return (tryte+tZ*amount)[-trits_per_tryte:]
+    global log_depth, indent
+    logger.debug(f'{indent * log_depth}>>>>> shift left {tryte} {amount}')
+    return (tryte+(tZ*amount))[-trits_per_tryte:]
 
 
 @makeTryte

@@ -43,7 +43,7 @@ def READ(buffer: TokenBuffer) -> AST:
                 logger.debug('\n\n')
             case 'IDENTIFIER':
                 logger.debug('matched identifier')
-                result.type = 'ident'
+                result.type = 'function'
                 result.data = peek.value
             case _:
                 logger.debug('did not match input')
