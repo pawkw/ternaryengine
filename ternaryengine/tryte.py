@@ -44,14 +44,17 @@ def pad(tryte: str) -> str:
 
 @makeTryte
 def __apply_unary_to_tryte(operation: str, tryte: str) -> str:
-    # logger.debug(f'operation {operation} tryte {tryte}')
+    tryte = pad(tryte)
+    logger.debug(f'operation {operation} tryte {tryte}')
     function = partial(monadic.apply_operator, operation)
     return ''.join(list(map(function, tryte)))
 
 
 @makeTryte
 def __apply_to_tryte(operation: str, tryte1: str, tryte2: str) -> str:
-    # logger.debug(f'operation {operation} tryte1 {tryte1} tryte2 {tryte2}')
+    tryte1 = pad(tryte1)
+    tryte2 = pad(tryte2)
+    logger.debug(f'operation {operation} tryte1 {tryte1} tryte2 {tryte2}')
     function = partial(diadic.apply_operator, operation)
     return ''.join(list(map(function, tryte1, tryte2)))
 

@@ -37,18 +37,20 @@ def EVAL(ast: AST, register_file: List) -> AST:
             result = AST(type='list', data='')
             result.children = children
             return result
-        
-        if len(param_list) != 2:
-                return AST(type='error', data=f'Requires two parameters: {param_list}.')
 
         if func_name == 'set':
+            if len(param_list) != 2:
+                return AST(type='error', data=f'Requires two parameters: {param_list}.')
             value = EVAL(param_list[1], register_file)
             if value.type == 'error':
                 return value
             register_file[register_index(param_list[0].data)] = value.data
             return value
         
-        func = get_function(func_name)
+        func, param_len = get_function(func_name)
+        if len(param_list) != param_len:
+                return AST(type='error', data=f'Requires {param_len} parameters: {param_list}.')
+        
         logger.debug(f'using function: {func}')
         if func == 'error':
             return AST(type='error', data=f'Could not find function {func_name}')

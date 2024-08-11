@@ -3,6 +3,7 @@ from TokenBuffer import TokenBuffer
 from typing import List, Any
 from replmodule.Ast import AST
 from ternaryengine.tryte import intToTryte
+from ternaryengine.defs import trit_chars
 
 logger = logging.getLogger(__name__)
 
@@ -42,9 +43,16 @@ def READ(buffer: TokenBuffer) -> AST:
                 result.data = intToTryte(int(peek.value))
                 logger.debug('\n\n')
             case 'IDENTIFIER':
-                logger.debug('matched identifier')
-                result.type = 'function'
-                result.data = peek.value
+                non_ternary = [x for x in peek.value if x not in trit_chars]
+                logger.debug(f'Non-ternary characters = {non_ternary}')
+                if non_ternary == []:
+                    logger.debug('matched ternary value')
+                    result.type = 'value'
+                    result.data = peek.value
+                else:
+                    logger.debug('matched identifier')
+                    result.type = 'function'
+                    result.data = peek.value
             case _:
                 logger.debug('did not match input')
                 result.type = 'error'

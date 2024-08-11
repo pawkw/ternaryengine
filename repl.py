@@ -8,7 +8,7 @@ from replmodule.eval import EVAL
 
 logger = logging.getLogger(__name__)
 FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
-logging.basicConfig(level=logging.WARN, format=FORMAT)
+logging.basicConfig(level=logging.DEBUG, format=FORMAT)
 
 # Set registers to ternary zero
 registers = [tZ for num in range(-13, 13)]
@@ -39,7 +39,6 @@ if __name__ == "__main__":
     atexit.register(readline.write_history_file, "history.txt")
 
     patterns = {
-        'TERNARY': r'[nzpNZP]+',
         'INTEGER': r'-?[0-9]+',
         'REGISTER': r'[rR][nzpNZP]+',
         'OPEN_PAREN': r'\(',

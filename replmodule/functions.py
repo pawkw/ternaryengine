@@ -3,24 +3,24 @@ from typing import List, Callable
 from ternaryengine.tryte import *
 
 function_dict = {
-    'sign': tSign,
-    'min': tMin,
-    'max': tMax,
-    'antimax': tAntimax,
-    'antimin': tAntimin,
-    'sum': tSum,
-    'xor': tXor,
-    'consensus': tConsensus,
-    'any': tAny,
-    'same': tSame,
-    'equal': tEqual,
-    'diff': tDiff,
-    'mul': tMul,
-    'compare': tCompare,
-    '<<': lambda tright, amount: tShiftLeft(tright, tryteToInt(amount)),
-    'negate': tNegate,
-    '+': tAdd,
-    '*': tMultiply,
+    'sign': (tSign, 1),
+    'min': (tMin, 2),
+    'max': (tMax, 2),
+    'antimax': (tAntimax, 2),
+    'antimin': (tAntimin, 2),
+    'sum': (tSum, 2),
+    'xor': (tXor, 2),
+    'consensus': (tConsensus, 2),
+    'any': (tAny, 2),
+    'same': (tSame, 2),
+    'equal': (tEqual, 2),
+    'diff': (tDiff, 2),
+    'mul': (tMul, 2),
+    'compare': (tCompare, 2),
+    '<<': (lambda tright, amount: tShiftLeft(tright, tryteToInt(amount)), 2),
+    'negate': (tNegate, 1),
+    '+': (tAdd, 2),
+    '*': (tMultiply, 2),
 }
 
 logger = logging.getLogger(__name__)
@@ -36,5 +36,7 @@ def get_function_list() -> List:
 
 def get_function(name: str) -> Callable:
     if name in function_dict.keys():
-        return function_dict[name]
-    return 'error'
+        result = function_dict[name]
+        logger.debug(f'returning {result}')
+        return result
+    return 'error', 0
