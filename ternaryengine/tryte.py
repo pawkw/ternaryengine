@@ -88,23 +88,23 @@ def tritMul(trit1: str, trit2: str) -> str:
 ##### Tryte predicates
 
 @makeTrit
-def tSign(tryte: str) -> str:
+def pSign(tryte: str) -> str:
     tryte = strip(tryte)
     if len(tryte) == 0:
         return tZ
     return tryte[0]
 
 
-def tIsZero(tryte: str) -> bool:
-    return tSign(tryte) == tZ
+def pIsZero(tryte: str) -> bool:
+    return pSign(tryte) == tZ
 
 
-def tIsNeg(tryte: str) -> bool:
-    return tSign(tryte) == tN
+def pIsNeg(tryte: str) -> bool:
+    return pSign(tryte) == tN
 
 
-def tIsPos(tryte: str) -> bool:
-    return tSign(tryte) == tP
+def pIsPos(tryte: str) -> bool:
+    return pSign(tryte) == tP
 
 
 ##### Tryte Operators
@@ -256,10 +256,10 @@ def tAdd(tryte1: str, tryte2: str) -> str:
     global log_depth, indent
     logger.debug(f'{indent * log_depth}>>>>> add {tryte1} {tryte2}')
     log_depth += 1
-    if tIsZero(tryte1):
+    if pIsZero(tryte1):
         log_depth -= 1
         return tryte2
-    if tIsZero(tryte2):
+    if pIsZero(tryte2):
         log_depth -= 1
         return tryte1
     
@@ -296,7 +296,7 @@ def tMultiply(tryte1: str, tryte2: str) -> str:
     global log_depth, indent
     logger.debug(f'{indent * log_depth}>>>>> multiply {tryte1} {tryte2}')
     log_depth += 1
-    if tIsZero(tryte1) or tIsZero(tryte2):
+    if pIsZero(tryte1) or pIsZero(tryte2):
         log_depth -= 1
         return tZ
     

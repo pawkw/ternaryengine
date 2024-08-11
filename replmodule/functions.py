@@ -3,7 +3,18 @@ from typing import List, Callable
 from ternaryengine.tryte import *
 
 function_dict = {
-    'sign': (tSign, 1),
+    'sign': (pSign, 1),
+    'ispos': (tIsPos, 1),
+    'clampdown': (tClampDown, 1),
+    'iszero': (tIsZero, 1),
+    'invertmask': (tInvertMask, 1),
+    'notneg': (tNotNeg, 1),
+    'clampup': (tClampUp, 1),
+    'inc': (tInc, 1),
+    'isneg': (tIsNeg, 1),
+    'dec': (tDec, 1),
+    'notzero': (tNotZero, 1),
+    'notpos': (tNotPos, 1),
     'min': (tMin, 2),
     'max': (tMax, 2),
     'antimax': (tAntimax, 2),
