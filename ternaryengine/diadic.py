@@ -7,6 +7,8 @@ operator_dict = {
     'antimax': 'pznppnnnn',
     'sum': 'pnznzpzpn',
     'xor': 'nzpzzzpzn',
+    'xnor': 'pznzzznzp',
+    'mask': 'pznzzznzp',
     'consensus': 'nzzzzzzzp',
     'any': 'nnznzpzpp',
     'same': 'pnnnpnnnp',

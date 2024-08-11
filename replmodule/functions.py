@@ -10,6 +10,8 @@ function_dict = {
     'antimin': (tAntimin, 2),
     'sum': (tSum, 2),
     'xor': (tXor, 2),
+    'xnor': (tXnor, 2),
+    'mask': (tMask, 2),
     'consensus': (tConsensus, 2),
     'any': (tAny, 2),
     'same': (tSame, 2),

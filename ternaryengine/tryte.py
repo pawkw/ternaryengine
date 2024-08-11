@@ -140,6 +140,16 @@ def tXor(tryte1: str, tryte2: str) -> str:
 
 
 @makeTryte
+def tXnor(tryte1: str, tryte2: str) -> str:
+    return __apply_to_tryte('xnor', tryte1, tryte2)
+
+
+@makeTryte
+def tMask(tryte1: str, tryte2: str) -> str:
+    return __apply_to_tryte('mask', tryte1, tryte2)
+
+
+@makeTryte
 def tConsensus(tryte1: str, tryte2: str) -> str:
     return __apply_to_tryte('consensus', tryte1, tryte2)
 
@@ -184,6 +194,61 @@ def tShiftLeft(tryte: str, amount: int) -> str:
 @makeTryte
 def tNegate(tryte: str) -> str:
     return __apply_unary_to_tryte('negate', tryte)
+
+
+@makeTryte
+def tIsPos(tryte: str) -> str:
+    return __apply_unary_to_tryte('isPos', tryte)
+
+
+@makeTryte
+def tClampDown(tryte: str) -> str:
+    return __apply_unary_to_tryte('clampDown', tryte)
+
+
+@makeTryte
+def tIsZero(tryte: str) -> str:
+    return __apply_unary_to_tryte('isZero', tryte)
+
+
+@makeTryte
+def tInvertMask(tryte: str) -> str:
+    return __apply_unary_to_tryte('invertMask', tryte)
+
+
+@makeTryte
+def tNotNeg(tryte: str) -> str:
+    return __apply_unary_to_tryte('notNeg', tryte)
+
+
+@makeTryte
+def tClampUp(tryte: str) -> str:
+    return __apply_unary_to_tryte('clampUp', tryte)
+
+
+@makeTryte
+def tInc(tryte: str) -> str:
+    return __apply_unary_to_tryte('inc', tryte)
+
+
+@makeTryte
+def tIsNeg(tryte: str) -> str:
+    return __apply_unary_to_tryte('isNeg', tryte)
+
+
+@makeTryte
+def tDec(tryte: str) -> str:
+    return __apply_unary_to_tryte('dec', tryte)
+
+
+@makeTryte
+def tNotZero(tryte: str) -> str:
+    return __apply_unary_to_tryte('notZero', tryte)
+
+
+@makeTryte
+def tNotPos(tryte: str) -> str:
+    return __apply_unary_to_tryte('notPos', tryte)
 
 
 @makeTryte

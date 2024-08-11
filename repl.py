@@ -8,7 +8,7 @@ from replmodule.eval import EVAL
 
 logger = logging.getLogger(__name__)
 FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
-logging.basicConfig(level=logging.DEBUG, format=FORMAT)
+logging.basicConfig(level=logging.WARN, format=FORMAT)
 
 # Set registers to ternary zero
 registers = [tZ for num in range(-13, 13)]

@@ -33,9 +33,8 @@ def EVAL(ast: AST, register_file: List) -> AST:
         param_list = ast.children[1:]
 
         if func_name == 'help' or func_name == 'list':
-            children = [AST(type='string', data=item) for item in get_function_list()]
-            result = AST(type='list', data='')
-            result.children = children
+            result = AST(type='string', data='Available functions: ')
+            result.data += ', '.join([x for x in get_function_list()])
             return result
 
         if func_name == 'set':

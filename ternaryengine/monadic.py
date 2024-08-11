@@ -42,7 +42,7 @@ operator_dict = {
 'isZero': 6,
 'unKnown': 6,
 '=': 6,
-# : 7,
+'invertMask': 7,
 'notNeg': 8,
 'notFalse': 8,
 '>=': 8,
