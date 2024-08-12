@@ -2,7 +2,7 @@ import logging
 from TokenBuffer import TokenBuffer
 from typing import List, Callable
 from replmodule.Ast import AST
-from ternaryengine.tryte import tryteToInt
+from ternaryengine.tryte import tryteToInt, trit_chars, trits_per_tryte
 from replmodule.functions import get_function, get_function_list
 
 logger = logging.getLogger(__name__)
@@ -13,6 +13,8 @@ def register_index(tryte: str) -> int:
     logger.debug(f'register index: {result}')
     return result
 
+
+bct_bits = ['10', '00', '01']
 def EVAL(ast: AST, register_file: List) -> AST:
     if ast.type == 'value' or ast.type == 'error' or ast.type == 'string':
         logger.debug(f'returning {ast.type} {ast.data}')
@@ -45,6 +47,17 @@ def EVAL(ast: AST, register_file: List) -> AST:
                 return value
             register_file[register_index(param_list[0].data)] = value.data
             return value
+        
+        if func_name == 'bct':
+            result = ''
+            for count, trit in enumerate(param_list[0].data):
+                result += bct_bits[trit_chars.index(trit)]
+                if (count+1)%3 == 0:
+                    result += '-'
+            if trits_per_tryte%3 == 0:
+                result = result[:-1]
+            ast = AST(type='string', data=result)
+            return ast
         
         func, param_len = get_function(func_name)
         if len(param_list) != param_len:

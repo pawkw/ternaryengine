@@ -1,14 +1,7 @@
 import logging
 from typing import List, Callable
 from ternaryengine.tryte import *
-
-
-bct_bits = ['10', '00', '01']
-def func_binary_coded_ternary(tryte: str) -> str:
-    result = ''
-    for trit in tryte:
-        result += bct_bits[trit_chars.index(trit)]
-    return result
+from replmodule.Ast import AST
 
 
 function_dict = {
@@ -44,7 +37,6 @@ function_dict = {
     'negate': (tNegate, 1),
     '+': (tAdd, 2),
     '*': (tMultiply, 2),
-    'bct': (func_binary_coded_ternary, 1)
 }
 
 logger = logging.getLogger(__name__)
